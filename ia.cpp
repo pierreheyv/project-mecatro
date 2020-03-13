@@ -1,47 +1,94 @@
 #include "ia.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 
-void computecmd(CtrlStruct *theCtrlStruct){
+void computecmd(CtrlStruct *theCtrlStruct)
+{
+    switch(theCtrlStruct->theUserStruct->state)
+    {
+    case 0: //en calibration
+        int wallnb;
+        //choisir une commande à donner au robot (en distance ou en vitesse)
+        run_position(theCtrlStruct);//if the cmd is in terme of distance to travel (middle level controller)
+        run_speed_controller(theCtrlStruct);//if the cmd is in terme of a wnted constant speed (directly to the low level)
+        //if (on touche le mur) ...
+        initpos(theCtrlStruct, wallnb);//put right the coord to 0;
+        //at the end change state
+        theCtrlStruct->theUserStruct->state = 2;
+        break;
 
-    cmdtype(theCtrlStruct);//chooses de cmd type
+    case 1: //laisser là pour au cas ou on a besoin d'un state en plus (par exemple action)
+        //
+        /*
+        ...
+        */
+        break;
 
-    int type = theCtrlStruct->theUserStruct->cmdtype;
-    //calculate the distance left, angle left
-    if (type == 2){ //mode manuel pure
+    case 2: //mode de routine
+        {
+            double dest[2];
+            pathplanning(theCtrlStruct);//...
+            takenext_dest(theCtrlStruct, dest); //load dest with coordinate of the next destination
+        }
+        break;
 
-        //take the instruction
+    case 3: //mode de test
+        //exemple
         theCtrlStruct->theUserStruct->wanteddist = 5;
         theCtrlStruct->theUserStruct->wantedangle = 0;
+        run_position(theCtrlStruct);//calculate what tension to give to the wheels (cfr posctrl)
+        break;
 
-        //calculates what's left (je sais pas comment faire niveau avancement distance linéaire et de rotation vs avancement)
-        theCtrlStruct->theUserStruct->distleft = theCtrlStruct->theUserStruct->wanteddist - theCtrlStruct->theUserStruct->avancement[0];
-        theCtrlStruct->theUserStruct->angleleft = theCtrlStruct->theUserStruct->wantedangle - theCtrlStruct->theUserStruct->avancement[0];
+    default: //à l'arrêt
+        theCtrlStruct->theUserStruct->wanteddist = 0;
+        theCtrlStruct->theUserStruct->wantedangle = 0;
+        run_position(theCtrlStruct);//calculate what tension to give to the wheels (cfr posctrl)
     }
 
-    else if (type == 1){//mode liste d'instructions
-        //calculates what's left
-        theCtrlStruct->theUserStruct->distleft = theCtrlStruct->theUserStruct->wanteddist - theCtrlStruct->theUserStruct->avancement[0];
-        double dleft = theCtrlStruct->theUserStruct->distleft;
-        double aleft = theCtrlStruct->theUserStruct->angleleft;
-        if (dleft == 0 && aleft == 0){
-            takenext_instru(theCtrlStruct);
-            //reset the avancements
-            theCtrlStruct->theUserStruct->avancement[0] = 0;
-            theCtrlStruct->theUserStruct->avancement[1] = 0;
-        }
+}
+
+void takenext_dest(CtrlStruct *theCtrlStruct, double dest[])
+{
+    //read from txt or table
+    // if in a txt
+    FILE *file;
+
+    // use appropriate location if you are using MacOS or Linux
+    file = fopen("dest.txt","r");
+
+    if(file == NULL)
+    {
+        printf("dest.txt not openable");
+        exit(1);
     }
+    else
+    {
+        fscanf(file, "%lf %lf", &dest[0], &dest[1]);
+        if (dest[0] == NULL || dest[1] == NULL)
+            printf("end of list of dest or bad writing");
+    }
+
+    fclose(file);
 }
 
-void cmdtype(CtrlStruct *theCtrlStruct){
-    theCtrlStruct->theUserStruct->cmdtype = 2; //puts the cmdtype to 2 (= manual test)
+void pathplanning(CtrlStruct *theCtrlStruct)
+{
+        //pathplanning ...
+        /*
+        ...
+        */
 }
 
-void takenext_instru(CtrlStruct *theCtrlStruct){
-    //to be implemented ...
-    //read from txt
-    double dist_inst = 5;//to be searched in the file
-    double angle_inst = 0;//to be searched in the file
-    //apply
-    theCtrlStruct->theUserStruct->wanteddist = dist_inst;
-    theCtrlStruct->theUserStruct->wantedangle = angle_inst;
+void initpos(CtrlStruct *theCtrlStruct, int wallnb)
+{
+    if (wallnb == 0)
+    {
+        theCtrlStruct->theUserStruct->posxyt[0] = 0;//x = 0
+    }
+    else if (wallnb == 1)
+    {
+        theCtrlStruct->theUserStruct->posxyt[1] = 0;//y = 0
+        theCtrlStruct->theUserStruct->posxyt[2] = 0;//orientation = 0
+    }
 }

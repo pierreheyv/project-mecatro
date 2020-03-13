@@ -15,11 +15,8 @@ CtrlStruct* init(){
 	structure->theUserStruct->cmdtype = 0;
     structure->theUserStruct->wanteddist = 0;
 	structure->theUserStruct->wantedangle = 0;
-	structure->theUserStruct->avancement[0] = 0;
-	structure->theUserStruct->avancement[1] = 0;
-	structure->theUserStruct->angleleft = 0;
-	structure->theUserStruct->distleft =0;
 	structure->theUserStruct->period = 0.003;
+	structure->theUserStruct->stime = 0;
 	return structure;
 }
 

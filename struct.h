@@ -17,9 +17,11 @@ typedef struct UserStruct{
 	int cmdtype;
 	double wanteddist; //objectif en distance
 	double wantedangle; //objectif en angle
-	double avancement[2]; //nb de tours sur chaque roues depuis le nouvel objectif
-	double distleft;
-	double angleleft;
+
+	//state informations
+	int state;
+	double posxyt[3];
+	double stime;//time calculation for the position measurement (in number of clock)
 } UserStruct;
 
 

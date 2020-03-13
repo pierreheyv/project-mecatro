@@ -1,39 +1,60 @@
-#include "speedctrl.h"
 #include "positionctrl.h"
 #include "IO/COM/SPI/SPI.hh"
 #include "IO/COM/SPI/Specific/SPI_DE0.hh"
 
+//#include <wiringPiSPI.h>
+#include <time.h>
+
+#define WR 0.03 //wheel radius (m)
+
 
 // 1) getting informations
 
-void updateinfo(CtrlStruct *theCtrlStruct, int lenc1, int lenc2, int wls, int wrs){
-
-    computeinfospeed(theCtrlStruct, wls, wrs); //compute speed @motor
-    //computeinfopos(theCtrlStruct); //compute position (avancement, pos)@odometre (pas encore)
-    //computedisttobeam(theCtrlStruct, lenc1, lenc2); //compute dist & angle to detected beam
+void updateinfo(CtrlStruct *theCtrlStruct, SPI_DE0 *spi){
+    motorspeed(theCtrlStruct, spi); //compute speed @motor
+    computeinfopos(theCtrlStruct, spi); //compute position (avancement, pos)@odometre (pas encore)
+    computedisttobeam(theCtrlStruct, spi); //compute dist & angle towards detected beam
 }
 
-void computeinfopos(CtrlStruct *theCtrlStruct) {
-    //prendre le nombre de tick sur chaque roue et calculer l'avancement
-    /*
-    theCtrlStruct->theUserStruct->avancement[0] = 0;
-    theCtrlStruct->theUserStruct->avancement[1] = 0;
-    */
+void computeinfopos(CtrlStruct *theCtrlStruct,  SPI_DE0 *spi) {
+
+    int lenc = adjusttbit(spi->read(0x04));//left encoder adrs to be defined
+    int renc = adjusttbit(spi->read(0x05));//right encoder adrs to be defined (nb tick total or tick/sec ?)
+
+    //methode de calcul de la position à faire (en robotique on utilise la vitesse mais je sais pas si c'est le mieux)
+    //transformer lenc & renc en tr/sec
+    //ce qu'on fait en robotique (lenc & renc en tr/sec):
+
+    double V = WR*(renc+lenc)/2;
+    double W = WR*(renc-lenc)/2;
+
+    double delta_t = clock() - theCtrlStruct->theUserStruct->stime;
+    theCtrlStruct->theUserStruct->stime = (double) clock();
+
+    double theta_inter = theCtrlStruct->theUserStruct->posxyt[2]+W*delta_t/2;
+
+    theCtrlStruct->theUserStruct->posxyt[0] = theCtrlStruct->theUserStruct->posxyt[0] + V*cos(theta_inter);
+    theCtrlStruct->theUserStruct->posxyt[1] = theCtrlStruct->theUserStruct->posxyt[0] + V*sin(theta_inter);
+    theCtrlStruct->theUserStruct->posxyt[2] = theCtrlStruct->theUserStruct->posxyt[0] + W*delta_t;
 }
 
-void computeinfospeed(CtrlStruct *theCtrlStruct, int wel, int wer) {
+void motorspeed(CtrlStruct *theCtrlStruct, SPI_DE0 *spi) {
+
+    int wer = adjusttbit(spi->read(0x00));
+    int wel = adjusttbit(spi->read(0x01));
+
     if (wel != 0 && fabs(wel) < 1000)
         theCtrlStruct->theCtrlIn->l_wheel_speed = ((double) wel)*500/1750/5.6;
     else printf("readed valuel not updated\n");
     if (wer != 0 && fabs(wer) < 1000)
         theCtrlStruct->theCtrlIn->r_wheel_speed = ((double) wer)*500/1750/5.6;
     else printf("readed valuer == 0 not updated\n");
-
-    printf("measured speed on left wheel : %f\n", theCtrlStruct->theCtrlIn->l_wheel_speed);
-
 }
 
-void computedisttobeam(CtrlStruct *theCtrlStruct, int lastRisingTick, int lastFallingTick) {
+void computedisttobeam(CtrlStruct *theCtrlStruct, SPI_DE0 *spi) {
+
+    int lastRisingTick = adjusttbit(spi->read(0x02));
+    int lastFallingTick = adjusttbit(spi->read(0x03));
 
     // Declaration of variables and constants
     int totalTicks = 1750;
@@ -84,12 +105,23 @@ void computedisttobeam(CtrlStruct *theCtrlStruct, int lastRisingTick, int lastFa
         theCtrlStruct->theCtrlIn->distance = distance;
       }
       theCtrlStruct->theCtrlIn->direction = direction;
-
-      printf("\n angle : %f \n", angle);
-      printf("distance : %f \n", distance);
-      printf("direction : %f \n", direction);
-      printf("nb de tick 1 = %d 2= %d", lastRisingTick, lastFallingTick);
 }
+
+int adjusttbit (int beforeTreatment)
+{
+        int mask;
+        if(beforeTreatment >= 0) //if positif number
+        {
+            mask = 0b00000000;
+        }
+        else
+        {
+            mask = 0b11111111;
+        }
+
+        return (mask <<24 | beforeTreatment>>8);
+}
+
 
 //2) Middlle controller
 
@@ -105,6 +137,6 @@ void run_position(CtrlStruct *theCtrlStruct){
     theCtrlStruct->theUserStruct->wantedspeedr = K*theCtrlStruct->theUserStruct->distleft;
     //pour une rotation ?
     */
-    //apply the speed
-    run_speed_controller(theCtrlStruct);
+
+    run_speed_controller(theCtrlStruct);//apply the speed
 }
