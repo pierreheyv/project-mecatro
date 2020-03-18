@@ -123,7 +123,7 @@ int adjusttbit (int beforeTreatment)
 }
 
 
-//2) Middlle controller
+//2) Middlle controller (should be in ia file for me, flemme to change)
 
 void run_position(CtrlStruct *theCtrlStruct){
 
@@ -137,6 +137,4 @@ void run_position(CtrlStruct *theCtrlStruct){
     theCtrlStruct->theUserStruct->wantedspeedr = K*theCtrlStruct->theUserStruct->distleft;
     //pour une rotation ?
     */
-
-    run_speed_controller(theCtrlStruct);//apply the speed
 }
