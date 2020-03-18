@@ -64,7 +64,7 @@ Path* adaptpath(Map mymap, Path mypath)//function to call if need a new path (at
 
 Path* pathplanning(Map mymap, Path mypath, Path best_path)//return an object Path with the best path and total expected points in it (most of the rest variable are unusable/false)
 {
-    if (best_path->totalPpoints < mypath->totalPpoints)
+    if (best_path->totalPpoints < mypath->totalPpoints || (best_path->totalPpoints == mypath->totalPpoints && best_path->timeleft < mypath->timeleft))
         best_path = mypath;
     //simulate a robot going trough all possibilities
     for(i=1; i< mypath->nbNodeNotVisited; i++)//test all nodes
