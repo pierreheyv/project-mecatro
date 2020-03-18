@@ -26,7 +26,7 @@ double CtrlOutCalc(double u_ref)
 }
 
 
-void run_speed_controller(CtrlStruct* theCtrlStruct)
+void run_speed_controller(CtrlStruct* theCtrlStruct, CAN* can)
 {
 
     double omega_ref[2];
@@ -57,5 +57,7 @@ void run_speed_controller(CtrlStruct* theCtrlStruct)
 
     theCtrlStruct->theCtrlOut->wheel_commands[0] = CtrlOutCalc(applied_u_l);
     theCtrlStruct->theCtrlOut->wheel_commands[1] = CtrlOutCalc(applied_u_r);
+
+    can->push_PropDC(theCtrlStruct->theCtrlOut->wheel_commands[0], theCtrlStruct->theCtrlOut->wheel_commands[1]);//apply the speed
 }
 
