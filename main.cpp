@@ -14,6 +14,7 @@
 #include "positionctrl.h"
 #include "ia.h"
 #include "speedctrl.h"
+#include "pathplanning.h"
 
 
 #define CAN_BR 125e3
@@ -62,17 +63,14 @@ int main()
     can->push_TowDC(0);
     can->push_PropDC(0, 0);
 
-    //path and map initialization (see pathplanning algorithm.c to understand how it works
-    /*
-    structure->theUserStruct->mymap = createmap();
-    structure->theUserStruct->mypath = initpath(mymap);
-    */
+    //path and map initialization (see pathplanning algorithm.c to understand how it works)
+    Map* mymap = initmap();
 
     while(1)
     {
         updateinfo(structure, spi);//(cfr posctrl) update info from laser tower and from encoder, speed, avancement, dist from beam
 
-        computecmd(structure);//(cfr ia) update the wanted commands
+        computecmd(structure, mymap);//(cfr ia) update the wanted commands
 
         //action : create sub function if need
         run_speed_controller(structure, can);//(cfr speedctrl )apply the speed (low level controller)
