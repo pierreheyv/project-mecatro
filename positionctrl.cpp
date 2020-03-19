@@ -121,20 +121,3 @@ int adjusttbit (int beforeTreatment)
 
         return (mask <<24 | beforeTreatment>>8);
 }
-
-
-//2) Middlle controller (should be in ia file for me, flemme to change)
-
-void run_position(CtrlStruct *theCtrlStruct){
-
-
-    theCtrlStruct->theUserStruct->wantedspeedl = 1.25; //made in the main if loop!!
-    theCtrlStruct->theUserStruct->wantedspeedr = 1.25;
-
-    /*
-    //next test is with a K factor
-    theCtrlStruct->theUserStruct->wantedspeedl = K*theCtrlStruct->theUserStruct->distleft;
-    theCtrlStruct->theUserStruct->wantedspeedr = K*theCtrlStruct->theUserStruct->distleft;
-    //pour une rotation ?
-    */
-}
