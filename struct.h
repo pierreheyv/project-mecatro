@@ -1,8 +1,9 @@
 #ifndef STRUCT_H_INCLUDED
 #define STRUCT_H_INCLUDED
 
+#include <stdlib.h>
 #include "IO/ctrl_io.h"
-//#include "pathplanning.h"
+#include "pathplanning.h"
 
 typedef struct UserStruct{
 	//speed controller
@@ -17,16 +18,13 @@ typedef struct UserStruct{
 
 	//cmd computation
 	int cmdtype;
-	double wanteddist; //objectif en distance
-	double wantedangle; //objectif en angle
-	//Path mypath;
-	//Map mymap;
 
 	//state informations
 	int state;
 	double posxyt[3];
 	double stime;//time calculation for the position measurement (in number of clock)
 	int movingState;//0 = linear, 1 = pure rotation
+	int calibstate;
 } UserStruct;
 
 
