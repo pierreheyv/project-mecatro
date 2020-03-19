@@ -14,7 +14,4 @@ void computeinfopos(CtrlStruct *theCtrlStruct, SPI_DE0 *spi);
 void motorspeed(CtrlStruct *theCtrlStruct, SPI_DE0 *spi);
 void computedisttobeam(CtrlStruct *theCtrlStruct, SPI_DE0 *spi);
 int adjusttbit (int beforeTreatment); //to treat the information comming from the FPGA (avoid the first dirty bit)
-
-//controller
-void run_position(CtrlStruct *theCtrlStruct);
 #endif // POSITIONCTRL_H_INCLUDED
