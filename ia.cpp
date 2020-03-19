@@ -3,15 +3,25 @@
 #include <stdlib.h>
 
 
-void computecmd(CtrlStruct *theCtrlStruct)
+void computecmd(CtrlStruct *theCtrlStruct, Map *mymap)
 {
     switch(theCtrlStruct->theUserStruct->state)
     {
     case 0: //en calibration
     {
+        /*
         int wallnb = 0;
 
+        if (je dois reculer)
+            theCtrlStruct->theUserStruct->wantedspeedl = -10;
+            if (mur touché)
+                theCtrlStruct->theUserStruct->calibstate = 2
+        if (je dois avancer)
+            theCtrlStruct->theUserStruct->wantedspeedl = 10;
+
+
         //choisir une commande à donner au robot (en distance ou en vitesse)
+        //theCtrlStruct->theUserStruct->wantedspeedl = 0;
 
         run_position(theCtrlStruct);//if the cmd is in terms of distance to travel (middle level controller)
         //theCtrlStruct->theUserStruct->wantedspeedl = ... //if cmd is in terms of speed
@@ -21,7 +31,8 @@ void computecmd(CtrlStruct *theCtrlStruct)
         initpos(theCtrlStruct, wallnb);//put right the coord to 0;
         //at the end change state
 
-        theCtrlStruct->theUserStruct->state = 2;
+        theCtrlStruct->theUserStruct->state = 10;
+        */
     }
     break;
 
@@ -35,19 +46,15 @@ void computecmd(CtrlStruct *theCtrlStruct)
     case 2: //navigation
     {
         double dest[2];
-        //dest[0] = theCtrlStruct->theUserStruct->mymap->Node[theCtrlStruct->theUserStruct->mypath->obj[theCtrlStruct->theUserStruct->mypath->objnb]][0];
-        //dest[1] = theCtrlStruct->theUserStruct->mymap->Node[theCtrlStruct->theUserStruct->mypath->obj[theCtrlStruct->theUserStruct->mypath->objnb]][1];
-        //dest[2] = theCtrlStruct->theUserStruct->mymap->Node[theCtrlStruct->theUserStruct->mypath->obj[theCtrlStruct->theUserStruct->mypath->objnb]][2];
-
+        dest[0] = mymap->node[mymap->mypath->obj[mymap->mypath->objnb]][0];
+        dest[1] = mymap->node[mymap->mypath->obj[mymap->mypath->objnb]][1];
+        dest[2] = mymap->node[mymap->mypath->obj[mymap->mypath->objnb]][2];
         middle_controller(theCtrlStruct, dest);//
     }
     break;
 
     case 3: //test
-        //exemple
-        theCtrlStruct->theUserStruct->wanteddist = 5;
-        theCtrlStruct->theUserStruct->wantedangle = 0;
-        run_position(theCtrlStruct);//calculate what tension to give to the wheels (cfr posctrl)
+        //...
         break;
 
     default: //stop
@@ -56,35 +63,6 @@ void computecmd(CtrlStruct *theCtrlStruct)
         //change_state(); //could be interresting to create a fct that check if the state has to be changed
     }
 
-}
-
-void takenext_dest(CtrlStruct *theCtrlStruct, double dest[]) //function created to test but probably unuseful
-{
-    //read from txt or table
-    // if in a txt
-    FILE *file;
-
-    // use appropriate location if you are using MacOS or Linux
-    file = fopen("dest.txt","r");
-
-    if(file == NULL)
-    {
-        printf("dest.txt not openable");
-        exit(1);
-    }
-    else
-    {
-        fscanf(file, "%lf %lf", &dest[0], &dest[1]);
-        if (dest[0] == NULL || dest[1] == NULL)
-            printf("end of list of dest or bad writing");
-    }
-
-    fclose(file);
-}
-
-void pathplanning(CtrlStruct *theCtrlStruct)
-{
-    //
 }
 
 void initpos(CtrlStruct *theCtrlStruct, int wallnb)
