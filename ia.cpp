@@ -15,12 +15,17 @@ void computecmd(CtrlStruct *theCtrlStruct, Map *mymap)
         {
             theCtrlStruct->theUserStruct->wantedspeedl = -10; //vitesse a determiner
             theCtrlStruct->theUserStruct->wantedspeedr = -10; //vitesse a determiner
-            if (1)
+
+            if (theCtrlStruct->theCtrlIn->u_switch[0])
             {
-                theCtrlStruct->theUserStruct->wantedspeedl = 0;
-                theCtrlStruct->theUserStruct->wantedspeedl = 0;
-                void initpos_right(theCtrlStruct, 1*structure->theUserStruct->side);
-                theCtrlStruct->theUserStruct->state_calib = 1;
+                theCtrlStruct->theUserStruct->wantedspeedr = 0;
+
+                if (theCtrlStruct->theCtrlIn->u_switch[1])
+                {
+                    theCtrlStruct->theUserStruct->wantedspeedl = 0;
+                    initpos(theCtrlStruct, theCtrlStruct->theUserStruct->side);
+                    theCtrlStruct->theUserStruct->state_calib = 1;
+                }
             }
         }
         case 1 : //goforward
@@ -116,12 +121,12 @@ void initpos(CtrlStruct *theCtrlStruct, int wallnb)
         theCtrlStruct->theUserStruct->posxyt[1] = 0;//y = 0
         theCtrlStruct->theUserStruct->posxyt[2] = M_PI/2;//orientation = 90
     }
-    if (wallnb == -1)
+    else if (wallnb == -1)
     {
         theCtrlStruct->theUserStruct->posxyt[0] = 0;//x = 0
         theCtrlStruct->theUserStruct->posxyt[2] = 0;//orientation = 0
     }
-    else if (wallnb == -2)
+    else (wallnb == -2)
     {
         theCtrlStruct->theUserStruct->posxyt[1] = 2000;//y = 2000
         theCtrlStruct->theUserStruct->posxyt[2] = M_PI/2;//orientation = 90
