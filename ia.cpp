@@ -39,7 +39,7 @@ void computecmd(CtrlStruct *theCtrlStruct, Map *mymap)
 
     case 4: //potent field mode
     {
-        avoid(theCtrlStruct, mymap);//cfr obstacle_avoidance
+        avoid(theCtrlStruct, mymap);//cfr upobstacle_avoidance
     }
 
     default: //stop
