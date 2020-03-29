@@ -7,148 +7,43 @@ void computecmd(CtrlStruct *theCtrlStruct, Map *mymap)
 {
     switch(theCtrlStruct->theUserStruct->state)
     {
+
     case 0: //en calibration
     {
-        switch(theCtrlStruct->theUserStruct->state_calib)
-        {
-        case 0: // goback
-        {
-            theCtrlStruct->theUserStruct->wantedspeedl = -10; //vitesse a determiner
-            theCtrlStruct->theUserStruct->wantedspeedr = -10; //vitesse a determiner
-
-            if (theCtrlStruct->theCtrlIn->u_switch[0])
-            {
-                theCtrlStruct->theUserStruct->wantedspeedr = 0;
-
-                if (theCtrlStruct->theCtrlIn->u_switch[1])
-                {
-                    theCtrlStruct->theUserStruct->wantedspeedl = 0;
-                    initpos(theCtrlStruct, theCtrlStruct->theUserStruct->side);
-                    theCtrlStruct->theUserStruct->state_calib = 1;
-                }
-            }
-        }
-        case 1 : //goforward
-        {
-            theCtrlStruct->theUserStruct->wantedspeedl = 10; //a definir
-            theCtrlStruct->theUserStruct->wantedspeedr = 10; //a definir
-            if (theCtrlStruct->theUserStruct->posxyt[0] >= 50) //a definir
-            {
-                theCtrlStruct->theUserStruct->wantedspeedl = 0;
-                theCtrlStruct->theUserStruct->wantedspeedl = 0;
-                //setPos (50)
-                theCtrlStruct->theUserStruct->state_calib = 2;
-            }
-        }
-
-        case 2 : //turn
-        {
-            theCtrlStruct->theUserStruct->wantedspeedl = 10*structure->theUserStruct->side; //a definir
-            theCtrlStruct->theUserStruct->wantedspeedr = -10*structure->theUserStruct->side; //a definir
-            if (theCtrlStruct->theUserStruct->posxyt[2] >= M_PI/2)
-            {
-                theCtrlStruct->theUserStruct->wantedspeedl = 0;
-                theCtrlStruct->theUserStruct->wantedspeedr = 0;
-                theCtrlStruct->theUserStruct->state_calib = 3;
-            }
-        }
-        case 3: //goback
-        {
-            theCtrlStruct->theUserStruct->wantedspeedl = -10; //a definir
-            theCtrlStruct->theUserStruct->wantedspeedr = -10; //a definir
-
-            if (theCtrlStruct->theCtrlIn->u_switch[0])
-            {
-                theCtrlStruct->theUserStruct->wantedspeedr = 0;
-
-                if (theCtrlStruct->theCtrlIn->u_switch[1])
-                {
-                    theCtrlStruct->theUserStruct->wantedspeedl = 0;
-                    initpos(theCtrlStruct, 2*theCtrlStruct->theUserStruct->side);
-                    theCtrlStruct->theUserStruct->state_calib = 4;
-                }
-            }
-        }
-        case 4 : //goforward
-        {
-            theCtrlStruct->theUserStruct->wantedspeedl = 10; //a definir
-            theCtrlStruct->theUserStruct->wantedspeedr = 10; //a definir
-            if (posy >= 50) //a definir
-            {
-                theCtrlStruct->theUserStruct->wantedspeedl = 0;
-                theCtrlStruct->theUserStruct->wantedspeedl = 0;
-                //SetPos (50)
-                theCtrlStruct->theUserStruct->state_calib = 0;
-                theCtrlStruct->theUserStruct->state = 10;
-            }
-        }
-        }
+        calib(theCtrlStruct);
     }
     break;
 
     case 1: //action
-        //
+    {
         /*
         ...
         */
-        break;
-
-        =======
-            /*
-            int wallnb = 0;
-
-            if (je dois reculer)
-                theCtrlStruct->theUserStruct->wantedspeedl = -10;
-                if (mur touché)
-                    theCtrlStruct->theUserStruct->calibstate = 2
-            if (je dois avancer)
-                theCtrlStruct->theUserStruct->wantedspeedl = 10;
-
-
-            //choisir une commande à donner au robot (en distance ou en vitesse)
-            //theCtrlStruct->theUserStruct->wantedspeedl = 0;
-
-            run_position(theCtrlStruct);//if the cmd is in terms of distance to travel (middle level controller)
-            //theCtrlStruct->theUserStruct->wantedspeedl = ... //if cmd is in terms of speed
-            //theCtrlStruct->theUserStruct->wantedspeedr = ...
-            //if (on touche le mur) ...
-
-            initpos(theCtrlStruct, wallnb);//put right the coord to 0;
-            //at the end change state
-
-            theCtrlStruct->theUserStruct->state = 10;
-            */
     }
     break;
 
-case 1: //action
-    //
-    /*
-    ...
-    */
-    break;
-
-case 2: //navigation
+    case 2: //navigation
     {
         double dest[2];
         dest[0] = mymap->node[mymap->mypath->obj[mymap->mypath->objnb]][0];
         dest[1] = mymap->node[mymap->mypath->obj[mymap->mypath->objnb]][1];
         dest[2] = mymap->node[mymap->mypath->obj[mymap->mypath->objnb]][2];
-        middle_controller(theCtrlStruct, dest);//
+        middle_controller(theCtrlStruct, dest);
     }
     break;
 
-case 3: //test
-    //...
+    case 3: //test
+        //...
+        break;
+
+    default: //stop
+    {
+        theCtrlStruct->theUserStruct->wantedspeedl = 0;
+        theCtrlStruct->theUserStruct->wantedspeedr = 0;
+        //change_state(); //could be interresting to create a fct that check if the state has to be changed
+    }
     break;
-
-
-default: //stop
-    theCtrlStruct->theUserStruct->wantedspeedl = 0;
-    theCtrlStruct->theUserStruct->wantedspeedr = 0;
-    //change_state(); //could be interresting to create a fct that check if the state has to be changed
-}
-
+    }
 }
 
 void initpos(CtrlStruct *theCtrlStruct, int wallnb)
@@ -168,7 +63,7 @@ void initpos(CtrlStruct *theCtrlStruct, int wallnb)
         theCtrlStruct->theUserStruct->posxyt[0] = 0;//x = 0
         theCtrlStruct->theUserStruct->posxyt[2] = 0;//orientation = 0
     }
-    else (wallnb == -2)
+    else
     {
         theCtrlStruct->theUserStruct->posxyt[1] = 2000;//y = 2000
         theCtrlStruct->theUserStruct->posxyt[2] = M_PI/2;//orientation = 90
@@ -207,4 +102,83 @@ void rot(CtrlStruct *structure, double angle)
 {
     structure->theUserStruct->wantedspeedl = KR*angle;
     structure->theUserStruct->wantedspeedr = -KR*angle;
+}
+
+void calib(CtrlStruct *theCtrlStruct)
+{
+    switch(theCtrlStruct->theUserStruct->state_calib)
+    {
+    case 0: // goback
+    {
+        theCtrlStruct->theUserStruct->wantedspeedl = -10; //vitesse a determiner
+        theCtrlStruct->theUserStruct->wantedspeedr = -10; //vitesse a determiner
+
+        if (theCtrlStruct->theCtrlIn->u_switch[0])
+        {
+            theCtrlStruct->theUserStruct->wantedspeedr = 0;
+
+            if (theCtrlStruct->theCtrlIn->u_switch[1])
+            {
+                theCtrlStruct->theUserStruct->wantedspeedl = 0;
+                initpos(theCtrlStruct, theCtrlStruct->theUserStruct->side);
+                theCtrlStruct->theUserStruct->state_calib = 1;
+            }
+        }
+    }
+    case 1 : //goforward
+    {
+        theCtrlStruct->theUserStruct->wantedspeedl = 10; //a definir
+        theCtrlStruct->theUserStruct->wantedspeedr = 10; //a definir
+
+        if (theCtrlStruct->theUserStruct->posxyt[0] >= 50) //a definir verif posx or posy
+        {
+            theCtrlStruct->theUserStruct->wantedspeedl = 0;
+            theCtrlStruct->theUserStruct->wantedspeedl = 0;
+            //setPos (50)
+            theCtrlStruct->theUserStruct->state_calib = 2;
+        }
+    }
+
+    case 2 : //turn
+    {
+        theCtrlStruct->theUserStruct->wantedspeedl = 10*theCtrlStruct->theUserStruct->side; //a definir
+        theCtrlStruct->theUserStruct->wantedspeedr = -10*theCtrlStruct->theUserStruct->side; //a definir
+        if (theCtrlStruct->theUserStruct->posxyt[2] >= M_PI/2)
+        {
+            theCtrlStruct->theUserStruct->wantedspeedl = 0;
+            theCtrlStruct->theUserStruct->wantedspeedr = 0;
+            theCtrlStruct->theUserStruct->state_calib = 3;
+        }
+    }
+    case 3: //goback
+    {
+        theCtrlStruct->theUserStruct->wantedspeedl = -10; //a definir
+        theCtrlStruct->theUserStruct->wantedspeedr = -10; //a definir
+
+        if (theCtrlStruct->theCtrlIn->u_switch[0])
+        {
+            theCtrlStruct->theUserStruct->wantedspeedr = 0;
+
+            if (theCtrlStruct->theCtrlIn->u_switch[1])
+            {
+                theCtrlStruct->theUserStruct->wantedspeedl = 0;
+                initpos(theCtrlStruct, 2*theCtrlStruct->theUserStruct->side);
+                theCtrlStruct->theUserStruct->state_calib = 4;
+            }
+        }
+    }
+    case 4 : //goforward
+    {
+        theCtrlStruct->theUserStruct->wantedspeedl = 10; //a definir
+        theCtrlStruct->theUserStruct->wantedspeedr = 10; //a definir
+        if (theCtrlStruct->theUserStruct->posxyt[0] >= 50) //verif if posx ou posy
+        {
+            theCtrlStruct->theUserStruct->wantedspeedl = 0;
+            theCtrlStruct->theUserStruct->wantedspeedl = 0;
+            //SetPos (50)
+            theCtrlStruct->theUserStruct->state_calib = 0;
+            theCtrlStruct->theUserStruct->state = 10;
+        }
+    }
+    }
 }
