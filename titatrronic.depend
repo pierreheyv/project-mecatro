@@ -1,0 +1,81 @@
+# depslib dependency file v1.0
+1585493014 source:c:\users\pierre\documents\github\project-mecatro\ia.cpp
+	"ia.h"
+	<stdio.h>
+	<stdlib.h>
+
+1585492672 c:\users\pierre\documents\github\project-mecatro\ia.h
+	"struct.h"
+	"positionctrl.h"
+	"speedctrl.h"
+	"pathplanning.h"
+
+1585491590 c:\users\pierre\documents\github\project-mecatro\struct.h
+	<stdlib.h>
+	"IO/ctrl_io.h"
+	"pathplanning.h"
+
+1585492526 c:\users\pierre\documents\github\project-mecatro\io\ctrl_io.h
+
+1585491586 c:\users\pierre\documents\github\project-mecatro\pathplanning.h
+	<stdio.h>
+	<stdlib.h>
+	"struct.h"
+
+1585491448 c:\users\pierre\documents\github\project-mecatro\positionctrl.h
+	"IO/COM/SPI/SPI.hh"
+	"IO/COM/SPI/Specific/SPI_DE0.hh"
+	"speedctrl.h"
+
+1584032546 c:\users\pierre\documents\github\project-mecatro\io\com\spi\spi.hh
+
+1583752464 c:\users\pierre\documents\github\project-mecatro\io\com\spi\specific\spi_de0.hh
+	"../SPI.hh"
+
+1585491449 c:\users\pierre\documents\github\project-mecatro\speedctrl.h
+	"IO/COM/CAN/CAN.hh"
+	"IO/COM/SPI/Specific/SPI_CAN.hh"
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+	"struct.h"
+
+1583752460 c:\users\pierre\documents\github\project-mecatro\io\com\can\can.hh
+	<stdint.h>
+	"../SPI/Specific/SPI_CAN.hh"
+	<cmath>
+
+1583752464 c:\users\pierre\documents\github\project-mecatro\io\com\spi\specific\spi_can.hh
+	<stdint.h>
+	"../SPI.hh"
+
+1585491586 source:c:\users\pierre\documents\github\project-mecatro\main.cpp
+	<cstdio>
+	<stdio.h>
+	<stdlib.h>
+	"IO/COM/CAN/CAN.hh"
+	"IO/COM/SPI/Specific/SPI_CAN.hh"
+	"IO/COM/SPI/SPI.hh"
+	"IO/COM/SPI/Specific/SPI_DE0.hh"
+	<math.h>
+	"struct.h"
+	"positionctrl.h"
+	"ia.h"
+	"speedctrl.h"
+	"pathplanning.h"
+
+1585491586 source:c:\users\pierre\documents\github\project-mecatro\pathplanning.cpp
+	"pathplanning.h"
+
+1585491448 source:c:\users\pierre\documents\github\project-mecatro\positionctrl.cpp
+	"positionctrl.h"
+	"IO/COM/SPI/SPI.hh"
+	"IO/COM/SPI/Specific/SPI_DE0.hh"
+	<time.h>
+
+1585491449 source:c:\users\pierre\documents\github\project-mecatro\speedctrl.cpp
+	"speedctrl.h"
+
+1585491590 source:c:\users\pierre\documents\github\project-mecatro\struct.cpp
+	"struct.h"
+
