@@ -63,7 +63,7 @@ int main()
     can->push_TowDC(0);
     can->push_PropDC(0, 0);
 
-    //path and map initialization (see pathplanning algorithm.c to understand how it works)
+    //path and map initialization (cfr pathplanning)
     Map* mymap = initmap();
 
     while(1)
