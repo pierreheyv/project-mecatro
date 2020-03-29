@@ -35,6 +35,8 @@
 		<Unit filename="ia.cpp" />
 		<Unit filename="ia.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="obstacle_avoidance.cpp" />
+		<Unit filename="obstacle_avoidance.h" />
 		<Unit filename="pathplanning.cpp" />
 		<Unit filename="pathplanning.h" />
 		<Unit filename="positionctrl.cpp" />
