@@ -23,9 +23,8 @@ typedef struct UserStruct{
 	int state;
 	double posxyt[3];
 	double stime;//time calculation for the position measurement (in number of clock)
-	int movingState;//0 = linear, 1 = pure rotation
-  
-	int state_calib;
+
+	int action_state;//action state, for calibration or other actions always put to 0 after action finished
 
 	//info carte strat
 	int side;
