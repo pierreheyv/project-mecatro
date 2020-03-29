@@ -42,27 +42,33 @@ void computecmd(CtrlStruct *theCtrlStruct, Map *mymap)
         }
 
         case 2 : //turn
+        {
+            theCtrlStruct->theUserStruct->wantedspeedl = 10*structure->theUserStruct->side; //a definir
+            theCtrlStruct->theUserStruct->wantedspeedr = -10*structure->theUserStruct->side; //a definir
+            if (theCtrlStruct->theUserStruct->posxyt[2] >= M_PI/2)
             {
-                theCtrlStruct->theUserStruct->wantedspeedl = 10*structure->theUserStruct->side; //a definir
-                theCtrlStruct->theUserStruct->wantedspeedr = -10*structure->theUserStruct->side; //a definir
-                if (theCtrlStruct->theUserStruct->posxyt[2] >= M_PI/2){
-                    theCtrlStruct->theUserStruct->wantedspeedl = 0;
-                    theCtrlStruct->theUserStruct->wantedspeedr = 0;
-                    theCtrlStruct->theUserStruct->state_calib = 3;
-                }
+                theCtrlStruct->theUserStruct->wantedspeedl = 0;
+                theCtrlStruct->theUserStruct->wantedspeedr = 0;
+                theCtrlStruct->theUserStruct->state_calib = 3;
             }
+        }
         case 3: //goback
+        {
+            theCtrlStruct->theUserStruct->wantedspeedl = -10; //a definir
+            theCtrlStruct->theUserStruct->wantedspeedr = -10; //a definir
+
+            if (theCtrlStruct->theCtrlIn->u_switch[0])
             {
-                theCtrlStruct->theUserStruct->wantedspeedl = -10; //a definir
-                theCtrlStruct->theUserStruct->wantedspeedr = -10; //a definir
-                if (1)
+                theCtrlStruct->theUserStruct->wantedspeedr = 0;
+
+                if (theCtrlStruct->theCtrlIn->u_switch[1])
                 {
-                   theCtrlStruct->theUserStruct->wantedspeedl = 0;
-                   theCtrlStruct->theUserStruct->wantedspeedl = 0;
-                   void initpos_right(theCtrlStruct, 2*structure->theUserStruct->side);
-                   theCtrlStruct->theUserStruct->state_calib = 4;
+                    theCtrlStruct->theUserStruct->wantedspeedl = 0;
+                    initpos(theCtrlStruct, 2*theCtrlStruct->theUserStruct->side);
+                    theCtrlStruct->theUserStruct->state_calib = 4;
                 }
             }
+        }
         case 4 : //goforward
         {
             theCtrlStruct->theUserStruct->wantedspeedl = 10; //a definir
@@ -87,42 +93,42 @@ void computecmd(CtrlStruct *theCtrlStruct, Map *mymap)
         */
         break;
 
-=======
-        /*
-        int wallnb = 0;
+        =======
+            /*
+            int wallnb = 0;
 
-        if (je dois reculer)
-            theCtrlStruct->theUserStruct->wantedspeedl = -10;
-            if (mur touché)
-                theCtrlStruct->theUserStruct->calibstate = 2
-        if (je dois avancer)
-            theCtrlStruct->theUserStruct->wantedspeedl = 10;
+            if (je dois reculer)
+                theCtrlStruct->theUserStruct->wantedspeedl = -10;
+                if (mur touché)
+                    theCtrlStruct->theUserStruct->calibstate = 2
+            if (je dois avancer)
+                theCtrlStruct->theUserStruct->wantedspeedl = 10;
 
 
-        //choisir une commande à donner au robot (en distance ou en vitesse)
-        //theCtrlStruct->theUserStruct->wantedspeedl = 0;
+            //choisir une commande à donner au robot (en distance ou en vitesse)
+            //theCtrlStruct->theUserStruct->wantedspeedl = 0;
 
-        run_position(theCtrlStruct);//if the cmd is in terms of distance to travel (middle level controller)
-        //theCtrlStruct->theUserStruct->wantedspeedl = ... //if cmd is in terms of speed
-        //theCtrlStruct->theUserStruct->wantedspeedr = ...
-        //if (on touche le mur) ...
+            run_position(theCtrlStruct);//if the cmd is in terms of distance to travel (middle level controller)
+            //theCtrlStruct->theUserStruct->wantedspeedl = ... //if cmd is in terms of speed
+            //theCtrlStruct->theUserStruct->wantedspeedr = ...
+            //if (on touche le mur) ...
 
-        initpos(theCtrlStruct, wallnb);//put right the coord to 0;
-        //at the end change state
+            initpos(theCtrlStruct, wallnb);//put right the coord to 0;
+            //at the end change state
 
-        theCtrlStruct->theUserStruct->state = 10;
-        */
+            theCtrlStruct->theUserStruct->state = 10;
+            */
     }
     break;
 
-    case 1: //action
-        //
-        /*
-        ...
-        */
-        break;
+case 1: //action
+    //
+    /*
+    ...
+    */
+    break;
 
-    case 2: //navigation
+case 2: //navigation
     {
         double dest[2];
         dest[0] = mymap->node[mymap->mypath->obj[mymap->mypath->objnb]][0];
@@ -132,16 +138,16 @@ void computecmd(CtrlStruct *theCtrlStruct, Map *mymap)
     }
     break;
 
-    case 3: //test
-        //...
-        break;
+case 3: //test
+    //...
+    break;
 
 
-    default: //stop
-        theCtrlStruct->theUserStruct->wantedspeedl = 0;
-        theCtrlStruct->theUserStruct->wantedspeedr = 0;
-        //change_state(); //could be interresting to create a fct that check if the state has to be changed
-    }
+default: //stop
+    theCtrlStruct->theUserStruct->wantedspeedl = 0;
+    theCtrlStruct->theUserStruct->wantedspeedr = 0;
+    //change_state(); //could be interresting to create a fct that check if the state has to be changed
+}
 
 }
 
