@@ -5,6 +5,7 @@
 #include "positionctrl.h"
 #include "speedctrl.h"
 #include "pathplanning.h"
+#include "obstacle_avoidance.h"
 
 //middle level controller cst
 #define KR 0.5 //coef de rotation
