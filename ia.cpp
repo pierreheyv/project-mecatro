@@ -16,9 +16,7 @@ void computecmd(CtrlStruct *theCtrlStruct, Map *mymap)
 
     case 1: //action
     {
-        /*
-        ...
-        */
+        nodeaction(theCtrlStruct, mymap);
     }
     break;
 
@@ -28,6 +26,7 @@ void computecmd(CtrlStruct *theCtrlStruct, Map *mymap)
         dest[0] = mymap->node[mymap->mypath->obj[mymap->mypath->objnb]][0];
         dest[1] = mymap->node[mymap->mypath->obj[mymap->mypath->objnb]][1];
         dest[2] = mymap->node[mymap->mypath->obj[mymap->mypath->objnb]][2];
+        //optimisation : ne doit pas être updatet tout le temps
         middle_controller(theCtrlStruct, dest);
     }
     break;
@@ -79,15 +78,23 @@ void middle_controller(CtrlStruct *structure, double objpos[3])
     double diffangle = diagangle - (structure->theUserStruct->posxyt[2]);
 
     //moving state orientation ?
-    if (fabs(diffangle) > M_PI/6 || fabs(dist) < 0.05) //needs to reoriente (if on obj pos or too desoriented
-        structure->theUserStruct->movingState = 1;
+    if (fabs(diffangle) > M_PI/6 || fabs(dist) < 0.05) //needs to be reoriented (if on obj pos or too desoriented)
+        structure->theUserStruct->action_state = 1;
 
     //apply
-    if (structure->theUserStruct->movingState == 1)//mode orientation
+    if (structure->theUserStruct->action_state == 1)//mode orientation
     {
         rot(structure, diffangle);
         if (fabs(diffangle) < M_PI/20) //orientation almost perfect
-            structure->theUserStruct->movingState = 0;
+        {
+            if (fabs(dist) < 0.05)
+            {
+                structure->theUserStruct->action_state = 0;
+                structure->theUserStruct->state = 3;//passer en mode action
+            }
+            else
+                structure->theUserStruct->action_state = 0;//passer en mode déplacement (+-) rectiligne
+        }
     }
     else
     {
@@ -106,7 +113,7 @@ void rot(CtrlStruct *structure, double angle)
 
 void calib(CtrlStruct *theCtrlStruct)
 {
-    switch(theCtrlStruct->theUserStruct->state_calib)
+    switch(theCtrlStruct->theUserStruct->action_state)
     {
     case 0: // goback
     {
@@ -121,7 +128,7 @@ void calib(CtrlStruct *theCtrlStruct)
             {
                 theCtrlStruct->theUserStruct->wantedspeedl = 0;
                 initpos(theCtrlStruct, theCtrlStruct->theUserStruct->side);
-                theCtrlStruct->theUserStruct->state_calib = 1;
+                theCtrlStruct->theUserStruct->action_state = 1;
             }
         }
     }
@@ -135,7 +142,7 @@ void calib(CtrlStruct *theCtrlStruct)
             theCtrlStruct->theUserStruct->wantedspeedl = 0;
             theCtrlStruct->theUserStruct->wantedspeedl = 0;
             //setPos (50)
-            theCtrlStruct->theUserStruct->state_calib = 2;
+            theCtrlStruct->theUserStruct->action_state = 2;
         }
     }
 
@@ -147,7 +154,7 @@ void calib(CtrlStruct *theCtrlStruct)
         {
             theCtrlStruct->theUserStruct->wantedspeedl = 0;
             theCtrlStruct->theUserStruct->wantedspeedr = 0;
-            theCtrlStruct->theUserStruct->state_calib = 3;
+            theCtrlStruct->theUserStruct->action_state = 3;
         }
     }
     case 3: //goback
@@ -163,7 +170,7 @@ void calib(CtrlStruct *theCtrlStruct)
             {
                 theCtrlStruct->theUserStruct->wantedspeedl = 0;
                 initpos(theCtrlStruct, 2*theCtrlStruct->theUserStruct->side);
-                theCtrlStruct->theUserStruct->state_calib = 4;
+                theCtrlStruct->theUserStruct->action_state = 4;
             }
         }
     }
@@ -175,9 +182,32 @@ void calib(CtrlStruct *theCtrlStruct)
         {
             theCtrlStruct->theUserStruct->wantedspeedl = 0;
             theCtrlStruct->theUserStruct->wantedspeedl = 0;
-            theCtrlStruct->theUserStruct->state_calib = 0;
+            theCtrlStruct->theUserStruct->action_state = 0;
             theCtrlStruct->theUserStruct->state = 10;
         }
     }
+    }
+}
+
+void nodeaction(CtrlStruct *theCtrlStruct, Map *mymap)
+{
+    switch (mymap->mypath->objnb)
+    {
+    case 0 :
+    {
+        //...
+    }
+    break;
+    case 1:
+    {
+        //...
+    }
+    break;
+    default : //if no action is needed
+    {
+        mymap->mypath->objnb++;//go to next obj
+        theCtrlStruct->theUserStruct->state = 2;//in navigation mode
+    }
+    break;
     }
 }
