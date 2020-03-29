@@ -87,6 +87,41 @@ void computecmd(CtrlStruct *theCtrlStruct, Map *mymap)
         */
         break;
 
+=======
+        /*
+        int wallnb = 0;
+
+        if (je dois reculer)
+            theCtrlStruct->theUserStruct->wantedspeedl = -10;
+            if (mur touché)
+                theCtrlStruct->theUserStruct->calibstate = 2
+        if (je dois avancer)
+            theCtrlStruct->theUserStruct->wantedspeedl = 10;
+
+
+        //choisir une commande à donner au robot (en distance ou en vitesse)
+        //theCtrlStruct->theUserStruct->wantedspeedl = 0;
+
+        run_position(theCtrlStruct);//if the cmd is in terms of distance to travel (middle level controller)
+        //theCtrlStruct->theUserStruct->wantedspeedl = ... //if cmd is in terms of speed
+        //theCtrlStruct->theUserStruct->wantedspeedr = ...
+        //if (on touche le mur) ...
+
+        initpos(theCtrlStruct, wallnb);//put right the coord to 0;
+        //at the end change state
+
+        theCtrlStruct->theUserStruct->state = 10;
+        */
+    }
+    break;
+
+    case 1: //action
+        //
+        /*
+        ...
+        */
+        break;
+
     case 2: //navigation
     {
         double dest[2];
@@ -100,6 +135,7 @@ void computecmd(CtrlStruct *theCtrlStruct, Map *mymap)
     case 3: //test
         //...
         break;
+
 
     default: //stop
         theCtrlStruct->theUserStruct->wantedspeedl = 0;
@@ -133,13 +169,12 @@ void initpos(CtrlStruct *theCtrlStruct, int wallnb)
     }
 }
 
-
 void middle_controller(CtrlStruct *structure, double objpos[3])
 {
     double deltax = structure->theUserStruct->posxyt[0] - objpos[0];
     double deltay = structure->theUserStruct->posxyt[1] - objpos[1];
     double dist = sqrt(pow(deltax, 2)+pow(deltay,2));
-    double diagangle = atan(((structure->theUserStruct->posxyt[1])-objpos[1])/((structure->theUserStruct->posxyt[0])-objpos[0]));//v�rif angle < 0
+    double diagangle = atan(((structure->theUserStruct->posxyt[1])-objpos[1])/((structure->theUserStruct->posxyt[0])-objpos[0]));//vérif angle < 0
     double diffangle = diagangle - (structure->theUserStruct->posxyt[2]);
 
     //moving state orientation ?

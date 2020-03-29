@@ -12,6 +12,7 @@ CtrlStruct* init(){
 	structure->theUserStruct->cmdtype = 0;
 	structure->theUserStruct->period = 0.003;
 	structure->theUserStruct->stime = 0;
+  
 	structure->theUserStruct->state_calib = 0;
 	structure->theUserStruct->side = 1; //1=right -1=left
 	return structure;

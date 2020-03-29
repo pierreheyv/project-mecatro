@@ -24,6 +24,7 @@ typedef struct UserStruct{
 	double posxyt[3];
 	double stime;//time calculation for the position measurement (in number of clock)
 	int movingState;//0 = linear, 1 = pure rotation
+  
 	int state_calib;
 
 	//info carte strat
