@@ -32,8 +32,15 @@ void computecmd(CtrlStruct *theCtrlStruct, Map *mymap)
     break;
 
     case 3: //test
+    {
         //...
-        break;
+    }
+    break;
+
+    case 4: //potent field mode
+    {
+        avoid(theCtrlStruct, mymap);//cfr obstacle_avoidance
+    }
 
     default: //stop
     {
