@@ -175,7 +175,6 @@ void calib(CtrlStruct *theCtrlStruct)
         {
             theCtrlStruct->theUserStruct->wantedspeedl = 0;
             theCtrlStruct->theUserStruct->wantedspeedl = 0;
-            //SetPos (50)
             theCtrlStruct->theUserStruct->state_calib = 0;
             theCtrlStruct->theUserStruct->state = 10;
         }
