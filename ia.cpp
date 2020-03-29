@@ -9,18 +9,97 @@ void computecmd(CtrlStruct *theCtrlStruct, Map *mymap)
     {
     case 0: //en calibration
     {
+        switch(theCtrlStruct->theUserStruct->state_calib)
+        {
+        case 0: // goback
+        {
+            theCtrlStruct->theUserStruct->wantedspeedl = -10; //vitesse a determiner
+            theCtrlStruct->theUserStruct->wantedspeedr = -10; //vitesse a determiner
+
+            if (theCtrlStruct->theCtrlIn->u_switch[0])
+            {
+                theCtrlStruct->theUserStruct->wantedspeedr = 0;
+
+                if (theCtrlStruct->theCtrlIn->u_switch[1])
+                {
+                    theCtrlStruct->theUserStruct->wantedspeedl = 0;
+                    initpos(theCtrlStruct, theCtrlStruct->theUserStruct->side);
+                    theCtrlStruct->theUserStruct->state_calib = 1;
+                }
+            }
+        }
+        case 1 : //goforward
+        {
+            theCtrlStruct->theUserStruct->wantedspeedl = 10; //a definir
+            theCtrlStruct->theUserStruct->wantedspeedr = 10; //a definir
+            if (theCtrlStruct->theUserStruct->posxyt[0] >= 50) //a definir
+            {
+                theCtrlStruct->theUserStruct->wantedspeedl = 0;
+                theCtrlStruct->theUserStruct->wantedspeedl = 0;
+                //setPos (50)
+                theCtrlStruct->theUserStruct->state_calib = 2;
+            }
+        }
+
+        case 2 : //turn
+            {
+                theCtrlStruct->theUserStruct->wantedspeedl = 10*structure->theUserStruct->side; //a definir
+                theCtrlStruct->theUserStruct->wantedspeedr = -10*structure->theUserStruct->side; //a definir
+                if (theCtrlStruct->theUserStruct->posxyt[2] >= M_PI/2){
+                    theCtrlStruct->theUserStruct->wantedspeedl = 0;
+                    theCtrlStruct->theUserStruct->wantedspeedr = 0;
+                    theCtrlStruct->theUserStruct->state_calib = 3;
+                }
+            }
+        case 3: //goback
+            {
+                theCtrlStruct->theUserStruct->wantedspeedl = -10; //a definir
+                theCtrlStruct->theUserStruct->wantedspeedr = -10; //a definir
+                if (1)
+                {
+                   theCtrlStruct->theUserStruct->wantedspeedl = 0;
+                   theCtrlStruct->theUserStruct->wantedspeedl = 0;
+                   void initpos_right(theCtrlStruct, 2*structure->theUserStruct->side);
+                   theCtrlStruct->theUserStruct->state_calib = 4;
+                }
+            }
+        case 4 : //goforward
+        {
+            theCtrlStruct->theUserStruct->wantedspeedl = 10; //a definir
+            theCtrlStruct->theUserStruct->wantedspeedr = 10; //a definir
+            if (posy >= 50) //a definir
+            {
+                theCtrlStruct->theUserStruct->wantedspeedl = 0;
+                theCtrlStruct->theUserStruct->wantedspeedl = 0;
+                //SetPos (50)
+                theCtrlStruct->theUserStruct->state_calib = 0;
+                theCtrlStruct->theUserStruct->state = 10;
+            }
+        }
+        }
+    }
+    break;
+
+    case 1: //action
+        //
+        /*
+        ...
+        */
+        break;
+
+=======
         /*
         int wallnb = 0;
 
         if (je dois reculer)
             theCtrlStruct->theUserStruct->wantedspeedl = -10;
-            if (mur touché)
+            if (mur touchÃ©)
                 theCtrlStruct->theUserStruct->calibstate = 2
         if (je dois avancer)
             theCtrlStruct->theUserStruct->wantedspeedl = 10;
 
 
-        //choisir une commande à donner au robot (en distance ou en vitesse)
+        //choisir une commande Ã  donner au robot (en distance ou en vitesse)
         //theCtrlStruct->theUserStruct->wantedspeedl = 0;
 
         run_position(theCtrlStruct);//if the cmd is in terms of distance to travel (middle level controller)
@@ -57,6 +136,7 @@ void computecmd(CtrlStruct *theCtrlStruct, Map *mymap)
         //...
         break;
 
+
     default: //stop
         theCtrlStruct->theUserStruct->wantedspeedl = 0;
         theCtrlStruct->theUserStruct->wantedspeedr = 0;
@@ -67,14 +147,25 @@ void computecmd(CtrlStruct *theCtrlStruct, Map *mymap)
 
 void initpos(CtrlStruct *theCtrlStruct, int wallnb)
 {
-    if (wallnb == 0)
+    if (wallnb == 1)
     {
         theCtrlStruct->theUserStruct->posxyt[0] = 0;//x = 0
+        theCtrlStruct->theUserStruct->posxyt[2] = 0;//orientation = 0
     }
-    else if (wallnb == 1)
+    else if (wallnb == 2)
     {
         theCtrlStruct->theUserStruct->posxyt[1] = 0;//y = 0
+        theCtrlStruct->theUserStruct->posxyt[2] = M_PI/2;//orientation = 90
+    }
+    else if (wallnb == -1)
+    {
+        theCtrlStruct->theUserStruct->posxyt[0] = 0;//x = 0
         theCtrlStruct->theUserStruct->posxyt[2] = 0;//orientation = 0
+    }
+    else (wallnb == -2)
+    {
+        theCtrlStruct->theUserStruct->posxyt[1] = 2000;//y = 2000
+        theCtrlStruct->theUserStruct->posxyt[2] = M_PI/2;//orientation = 90
     }
 }
 
@@ -83,7 +174,7 @@ void middle_controller(CtrlStruct *structure, double objpos[3])
     double deltax = structure->theUserStruct->posxyt[0] - objpos[0];
     double deltay = structure->theUserStruct->posxyt[1] - objpos[1];
     double dist = sqrt(pow(deltax, 2)+pow(deltay,2));
-    double diagangle = atan(((structure->theUserStruct->posxyt[1])-objpos[1])/((structure->theUserStruct->posxyt[0])-objpos[0]));//vérif angle < 0
+    double diagangle = atan(((structure->theUserStruct->posxyt[1])-objpos[1])/((structure->theUserStruct->posxyt[0])-objpos[0]));//vÃ©rif angle < 0
     double diffangle = diagangle - (structure->theUserStruct->posxyt[2]);
 
     //moving state orientation ?
