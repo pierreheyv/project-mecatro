@@ -16,6 +16,7 @@ void updateinfo(CtrlStruct *theCtrlStruct, SPI_DE0 *spi)
     computeinfopos(theCtrlStruct, spi); //compute position (avancement, pos)@odometre (pas encore)
     computedisttobeam(theCtrlStruct, spi); //compute dist & angle towards detected beam
     needtoavoid(theCtrlStruct);
+    proberror(theCtrlStruct);//calculate the error area and launch calibration if needed
 }
 
 void computeinfopos(CtrlStruct *theCtrlStruct,  SPI_DE0 *spi)
@@ -147,4 +148,10 @@ void needtoavoid(CtrlStruct *theCtrlStruct)
 {
     if (theCtrlStruct->theCtrlIn->distance < DISTTOAVOIDR || theCtrlStruct->theUserStruct->posxyt[1] < 0.5)//si trop près d'un robot ou trop près d'un bord ...
         theCtrlStruct->theUserStruct->state = 4;//passing to potential field mode till obstacle avoided
+}
+
+
+void proberror(CtrlStruct *theCtrlStruct)
+{
+    //...
 }
