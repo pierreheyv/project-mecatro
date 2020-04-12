@@ -1,4 +1,4 @@
-#include <CtrlStruct_gr4.h>
+#include "CtrlStruct_gr4.h"
 #include "namespace_ctrl.h"
 #include "mapandpath_gr4.h"
 
@@ -14,7 +14,7 @@ NAMESPACE_INIT(ctrlGr4);
 
 void update_destlist(Map* mymap, Path* simupath)//adapth mymap with the best path and total expected points in it variable have to be initialized before
 {
-    if (simupath->nbNodeNotVisited >= 1 && simupath->nbciblenode <= 2)//adapted to robotics
+    if (simupath->nbNodeNotVisited >= 1)//adapted to robotics
     {
         Path savepath = *simupath;//créer nouveau path (avec les même carac)
         Path* psavepath = &savepath;//adresse de newpath
@@ -30,8 +30,6 @@ void update_destlist(Map* mymap, Path* simupath)//adapth mymap with the best pat
                 {
                     newpath.timeleft = pnewpath->timeleft - (mymap->dist[0][i]+ mymap->node[i][4]); //timeleft update
                     newpath.totalPoints = (pnewpath->totalPoints + mymap->node[i][3]); //point number update
-                    if (mymap->node[i][3] > 0)
-                        pnewpath->nbciblenode++;//if the node gives points add to the nb of nodes with cible
                     newpath.actual_node = i;//actual node for simulation
                     newpath.visited[i] = 1;//set analysing node as visited
                     newpath.obj[pnewpath->objnb] = i;//node added to the path obj list
@@ -69,7 +67,6 @@ void newpath(Map *mymap, double timepassed)//function to call if need a new path
     mymap->mypath->objnb = 0;
     mymap->mypath->timeleft = GAMETIME -  timepassed; //time left actualisation
     mymap->mypath->nextNodelnb = 0;
-    mymap->mypath->nbciblenode = 0;
     update_destlist(mymap, mymap->mypath);
     mymap->mypath->nextNode = mymap->mypath->obj[0];
 }

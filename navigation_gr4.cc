@@ -6,7 +6,7 @@
 #include "navigation_gr4.h"
 #include "namespace_ctrl.h"
 #include "performActions_gr4.h"
-#include <CtrlStruct_gr4.h>
+#include "CtrlStruct_gr4.h"
 
 NAMESPACE_INIT(ctrlGr4);
 //////////////////////////////////////////////////////////////////////////////////
@@ -115,8 +115,8 @@ void potential_field(CtrlStruct *structure, Map *mymap)
     double dist;
     double fint;//force intensity
 
-    double resfp;//resultant force in the robot frame perpendicular to the robot
-    double resff;//resultant force in the robot frame toward the forward movement of the robot
+    double resfp = 0;//resultant force in the robot frame perpendicular to the robot
+    double resff = 0;//resultant force in the robot frame toward the forward movement of the robot
 
     //add the point of attraction force
     deltax = structure->position_xyt[0] - mymap->node[mymap->mypath->obj[mymap->mypath->nextNode]][0];

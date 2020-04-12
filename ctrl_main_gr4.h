@@ -32,7 +32,7 @@ void controller_init(CtrlStruct *cvs);
 void controller_loop(CtrlStruct *cvs);
 void controller_finish(CtrlStruct *cvs);
 
-void setStartingSide(CtrlStruct *cvs);
+void timeisover(CtrlStruct *cvs);
 
 
 NAMESPACE_CLOSE();

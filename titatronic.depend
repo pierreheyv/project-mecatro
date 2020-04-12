@@ -1,0 +1,125 @@
+# depslib dependency file v1.0
+1586683562 source:c:\users\pierre\documents\epl\m2\projet\programmation\titatronic\ctrl_main_gr4.cc
+	"ctrl_main_gr4.h"
+	"namespace_ctrl.h"
+	"CtrlStruct_gr4.h"
+
+1586683254 c:\users\pierre\documents\epl\m2\projet\programmation\titatronic\ctrl_main_gr4.h
+	"CtrlStruct_gr4.h"
+	"namespace_ctrl.h"
+	<stdlib.h>
+	"mapandpath_gr4.h"
+	"calibration_gr4.h"
+	"navigation_gr4.h"
+	"sensorInformation_gr4.h"
+	"performActions_gr4.h"
+	"speed_controller_gr4.h"
+	<stdio.h>
+	<math.h>
+	<cmath>
+
+1586178143 c:\users\pierre\documents\epl\m2\projet\programmation\titatronic\ctrlstruct_gr4.h
+	"ctrl_io.h"
+	"namespace_ctrl.h"
+	"mapandpath_gr4.h"
+	<stdlib.h>
+	<math.h>
+	<cmath>
+
+1586681656 c:\users\pierre\documents\epl\m2\projet\programmation\titatronic\ctrl_io.h
+
+1584139380 c:\users\pierre\documents\epl\m2\projet\programmation\titatronic\namespace_ctrl.h
+
+1586683798 c:\users\pierre\documents\epl\m2\projet\programmation\titatronic\mapandpath_gr4.h
+	"namespace_ctrl.h"
+	"CtrlStruct_gr4.h"
+	<stdlib.h>
+	<stdio.h>
+	<math.h>
+	<cmath>
+
+1586117289 c:\users\pierre\documents\epl\m2\projet\programmation\titatronic\calibration_gr4.h
+	"namespace_ctrl.h"
+	"CtrlStruct_gr4.h"
+	<stdlib.h>
+	<stdio.h>
+	<math.h>
+	<cmath>
+
+1586178925 c:\users\pierre\documents\epl\m2\projet\programmation\titatronic\navigation_gr4.h
+	"CtrlStruct_gr4.h"
+	"namespace_ctrl.h"
+	"mapandpath_gr4.h"
+	<stdlib.h>
+	<stdio.h>
+	<math.h>
+	<cmath>
+
+1586119380 c:\users\pierre\documents\epl\m2\projet\programmation\titatronic\sensorinformation_gr4.h
+	"CtrlStruct_gr4.h"
+	"namespace_ctrl.h"
+	<stdlib.h>
+	<stdio.h>
+	<math.h>
+	<cmath>
+
+1586179667 c:\users\pierre\documents\epl\m2\projet\programmation\titatronic\performactions_gr4.h
+	"CtrlStruct_gr4.h"
+	"namespace_ctrl.h"
+	"mapandpath_gr4.h"
+	<stdlib.h>
+	<stdio.h>
+	<math.h>
+	<cmath>
+
+1586180104 c:\users\pierre\documents\epl\m2\projet\programmation\titatronic\speed_controller_gr4.h
+	"CtrlStruct_gr4.h"
+	"namespace_ctrl.h"
+	"sensorInformation_gr4.h"
+	<stdlib.h>
+	<stdio.h>
+	<math.h>
+	<cmath>
+
+1586683569 source:c:\users\pierre\documents\epl\m2\projet\programmation\titatronic\ctrlstruct_gr4.cc
+	"CtrlStruct_gr4.h"
+	"namespace_ctrl.h"
+
+1584209020 source:c:\users\pierre\documents\epl\m2\projet\programmation\titatronic\main.cpp
+	<iostream>
+
+1586681912 source:c:\users\pierre\documents\epl\m2\projet\programmation\titatronic\calibration_gr4.cc
+	"namespace_ctrl.h"
+	"calibration_gr4.h"
+	"CtrlStruct_gr4.h"
+
+1586681919 source:c:\users\pierre\documents\epl\m2\projet\programmation\titatronic\performactions_gr4.cc
+	"namespace_ctrl.h"
+	"performActions_gr4.h"
+	"CtrlStruct_gr4.h"
+
+1586683765 source:c:\users\pierre\documents\epl\m2\projet\programmation\titatronic\mapandpath_gr4.cpp
+	"CtrlStruct_gr4.h"
+	"namespace_ctrl.h"
+	"mapandpath_gr4.h"
+	<iostream>
+	<fstream>
+	<cstdlib>
+	<cstdio>
+
+1586681933 source:c:\users\pierre\documents\epl\m2\projet\programmation\titatronic\sensorinformation_gr4.cc
+	"namespace_ctrl.h"
+	"sensorInformation_gr4.h"
+	"CtrlStruct_gr4.h"
+
+1586682150 source:c:\users\pierre\documents\epl\m2\projet\programmation\titatronic\navigation_gr4.cc
+	"navigation_gr4.h"
+	"namespace_ctrl.h"
+	"performActions_gr4.h"
+	"CtrlStruct_gr4.h"
+
+1586681947 source:c:\users\pierre\documents\epl\m2\projet\programmation\titatronic\speed_controller_gr4.cc
+	"speed_controller_gr4.h"
+	"namespace_ctrl.h"
+	"CtrlStruct_gr4.h"
+

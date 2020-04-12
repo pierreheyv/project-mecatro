@@ -6,7 +6,7 @@
 #include "namespace_ctrl.h"
 
 #include "sensorInformation_gr4.h"
-#include <CtrlStruct_gr4.h>
+#include "CtrlStruct_gr4.h"
 
 #define WIDENESS 0.07
 

@@ -25,7 +25,6 @@ typedef struct Path{
     int objnb;//number of obj in the path
     int nextNode;//number of the next node on the path
     int nextNodelnb;//number of the next node on the destlist
-    int nbciblenode;//number of nodes with target added to the dest list
 } Path;
 
 typedef struct Obstacles{

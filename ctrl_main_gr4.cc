@@ -20,25 +20,7 @@ NAMESPACE_INIT(ctrlGr4);
  */
 void controller_init(CtrlStruct *cvs)
 {
-    setStartingSide(cvs);
     cvs->mymap = initmap();//cfr map and path
-}
-
-/*! \brief updte the starting side variable
- *
- * -1 if right side / 1 if left side
- * \param[in] cvs controller main structure
- */
-void setStartingSide(CtrlStruct *cvs) // Later I will choose the constant position depending of the robot ID maybe
-{
-    if(cvs->inputs->robot_id < 2)
-    {
-        cvs->startingSide = -1; // robot on the right/yellow side
-    }
-    else
-    {
-        cvs->startingSide = 1; //robot on the left/blue side
-    }
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -56,12 +38,7 @@ void controller_loop(CtrlStruct *cvs)
     //test if it's time to end and goback to base for the end of the game
     cvs->tactual = cvs->inputs->t;
 
-    cvs->mymap->mypath->timeleft = cvs->mymap->mypath->timeleft - cvs->tactual;
-    if ((cvs->mymap->dist[cvs->mymap->mypath->actual_node][BASENODE] + TIMEMARGIN < cvs->mymap->mypath->timeleft))//if time to go home go home
-    {
-        cvs->stateGlobal = 1;
-        cvs->mymap->mypath->nextNode = BASENODE;
-    }
+    timeisover(cvs);//check if it is time to go back to base
 
     //getting information
     odometrie(cvs);//cfr odometrie.c
@@ -91,7 +68,19 @@ void controller_loop(CtrlStruct *cvs)
         stopActions(cvs);
         printf("in case stop \n");
     }
+
     controller_speed_loop(cvs);
+}
+
+
+void timeisover(CtrlStruct *cvs)
+{
+    cvs->mymap->mypath->timeleft = cvs->mymap->mypath->timeleft - cvs->tactual;
+    if ((cvs->mymap->dist[cvs->mymap->mypath->actual_node][BASENODE] + TIMEMARGIN < cvs->mymap->mypath->timeleft))//if time to go home : go home
+    {
+        cvs->stateGlobal = 1;
+        cvs->mymap->mypath->nextNode = BASENODE;//check in witch base to go (North or South)
+    }
 }
 
 //////////////////////////////////////////////////////////////////////////////////

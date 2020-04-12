@@ -20,16 +20,8 @@ CtrlStruct* init_CtrlStruct(CtrlIn *inputs, CtrlOut *outputs, CtrlOut *py_output
 	cvs->py_outputs = py_outputs;
 
     cvs->tprev=cvs->inputs->t;
-    cvs->tactual =cvs->inputs->t;
-    cvs->period = 0;
-    cvs->integ_err_l_prev=0;
-    cvs->integ_err_r_prev=0;
-    cvs->err_xyt[0]=0;
-    cvs->err_xyt[1]=0;
-    cvs->err_xyt[2]=0;
+    cvs->startingSide = -1;//blocked
 
-    cvs->wheel_demands[0] = 0;
-    cvs->wheel_demands[1] = 0;
     cvs->outputs->wheel_commands[0] = 0;
     cvs->outputs->wheel_commands[1] = 0;
     cvs->outputs->tower_command = 0;
@@ -44,6 +36,7 @@ CtrlStruct* init_CtrlStruct(CtrlIn *inputs, CtrlOut *outputs, CtrlOut *py_output
     for(int i=0; i<3 ; i++) {
         cvs->pos_beacon_disdirray[i] = new double[inputs->nb_opponents];
     }
+
 
 	return cvs;
 }

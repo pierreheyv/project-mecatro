@@ -5,7 +5,7 @@
 
 #include "speed_controller_gr4.h"
 #include "namespace_ctrl.h"
-#include <CtrlStruct_gr4.h>
+#include "CtrlStruct_gr4.h"
 
 
 NAMESPACE_INIT(ctrlGr4);
