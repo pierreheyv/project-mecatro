@@ -14,6 +14,7 @@
 #define KL 50
 
 #define DECFP 0.03
+#define NBPREDPERIOD 10
 #define ROBOTRADIUS 0.14
 #define KRA 0.1
 #define WIDENESS 0.07

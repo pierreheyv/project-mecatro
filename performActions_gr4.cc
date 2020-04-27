@@ -35,6 +35,7 @@ void performActions(CtrlStruct *cvs)
         else
         {
             nextobj(cvs->mymap->mypath);
+            cvs->stateGlobal = 1;
         }
         break;
     case 3 : //manche à air
@@ -49,6 +50,7 @@ void performActions(CtrlStruct *cvs)
 
     default : //no action defined with this node => go to next
         nextobj(cvs->mymap->mypath);
+        cvs->stateGlobal = 1;
     }
 }
 
@@ -69,7 +71,6 @@ void nextobj(Path* mypath)
         mypath->nextNodelnb++;
         mypath->nextNode = mypath->obj[mypath->nextNodelnb];
     }
-    cvs->stateGlobal = 1;
 }
 
 //////////////////////////////////////////////////////////////////////////////////

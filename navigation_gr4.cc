@@ -118,7 +118,7 @@ void potential_field(CtrlStruct *structure, Map *mymap)
     double resfp = 0;//resultant force in the robot frame perpendicular to the robot
     double resff = 0;//resultant force in the robot frame toward the forward movement of the robot
 
-    //add the point of attraction force
+    //objective computation
     deltax = structure->position_xyt[0] - mymap->node[mymap->mypath->obj[mymap->mypath->nextNode]][0];
     deltay = structure->position_xyt[1] - mymap->node[mymap->mypath->obj[mymap->mypath->nextNode]][1];
 
@@ -128,11 +128,12 @@ void potential_field(CtrlStruct *structure, Map *mymap)
     if (fabs(dist) < 0.01) //if we are on target go to action state
     {
         structure->stateNavigation = 0;
-        structure->stateGlobal = 2;//passer en mode stop
+        structure->stateGlobal = 2;//passer en mode action
         structure->startingActiontime = structure->inputs->t;
-        printf("on target");
         return;
     }
+
+    //calculate the resultant forces for the attraction point = obj node
 
     fangle = atan((deltay)/(deltax));//vérif angle < 0
     diffangle = structure->position_xyt[2] - fangle;
@@ -140,14 +141,15 @@ void potential_field(CtrlStruct *structure, Map *mymap)
     resfp = resfp + cos(diffangle)*fint;
     resff = resff + sin(diffangle)*fint;
 
-    //calculate the resultant of the obstacle forces in the robot system for all the fixed obstacles
+    //calculate and add the resultant forces for the fixed obstacles
+
     for(int i=0; i<mymap->obstaclesnb; i++)
     {
         deltax = structure->position_xyt[0] - mymap->obstacles[i][0];
         deltay = structure->position_xyt[1] - mymap->obstacles[i][1];
 
         dist = sqrt(pow(deltax, 2)+pow(deltay,2));
-        fint = - KFA/(dist - mymap->obstacles[i][2]); //force in 1/x
+        fint = - KFA/(dist - mymap->obstacles[i][2]); //force in alpha/(dist-obst wideness)
 
         fangle = atan((deltay)/(deltax));//vérif angle < 0
         diffangle = structure->position_xyt[2] - fangle;
@@ -156,17 +158,65 @@ void potential_field(CtrlStruct *structure, Map *mymap)
         resff = resff + sin(diffangle)*fint;
     }
 
-    //add the forces due to the oponnents
+    //calculate and add the resultant forces for the boundaries limits
+
+    if (structure->position_xyt[0] > 0)
+    {
+        dist = 1-structure->position_xyt[0];
+        fangle = 3*M_PI_2;
+    }
+    else
+    {
+        dist = 1+structure->position_xyt[0];
+        fangle = M_PI_2;
+    }
+
+    diffangle = structure->position_xyt[2] - fangle;
+    fint = - KFA/(dist); //force in alpha/(dist-obst wideness)
+
+    resfp = resfp + cos(diffangle)*fint;
+    resff = resff + sin(diffangle)*fint;
+
+    if (structure->position_xyt[1] > 0)
+    {
+        dist = 1.5 - structure->position_xyt[1];
+        fangle = M_PI;
+    }
+    else
+    {
+        dist = 1.5 + structure->position_xyt[1];
+        fangle = 0;
+    }
+
+    diffangle = structure->position_xyt[2] - fangle;
+    fint = - KFA/(dist); //force in alpha/(dist-obst wideness)
+
+    resfp = resfp + cos(diffangle)*fint;
+    resff = resff + sin(diffangle)*fint;
+
+    //calculate and add the forces due to the oponnents
     for(int i=0; i< structure->inputs->nb_opponents; i++)
     {
         dist = structure->pos_beacon_disdirray[0][i];
-        double dir = structure->pos_beacon_disdirray[1][i];
-        double width = structure->pos_beacon_disdirray[2][i];
+        diffangle = structure->pos_beacon_disdirray[1][i];
 
-        fint = - KFA/(dist - width - ROBOTRADIUS);//force in 1/x
+        fint = - KFA/(dist - structure->pos_beacon_disdirray[2][i] - ROBOTRADIUS);//force in alpha/(dist - robot radius - opponent radius)//should not happen but what if neg ?
 
-        resfp = resfp + cos(dir)*fint;
-        resff = resff + sin(dir)*fint;
+        resfp = resfp + cos(diffangle)*fint;
+        resff = resff + sin(diffangle)*fint;
+    }
+
+    //calculate and add the forces due to the oponnents prediction position
+    for(int i=0; i< structure->inputs->nb_opponents; i++)
+    {
+
+        dist = structure->pos_beacon_disdirray[0][i] + (structure->pos_beacon_disdirray[0][i] - structure->prev_pos_beacon_disdirray[NBDATAPRED][0][i])/NBDATAPRED*NBPREDPERIOD;
+        diffangle = structure->pos_beacon_disdirray[1][i] + (structure->pos_beacon_disdirray[1][i] - structure->prev_pos_beacon_disdirray[NBDATAPRED][1][i])/NBDATAPRED*NBPREDPERIOD;
+
+        fint = - KFA/(dist - structure->pos_beacon_disdirray[2][i] - ROBOTRADIUS);//force in alpha/(dist - robot radius - opponent radius)//should not happen but what if neg ?
+
+        resfp = resfp + cos(diffangle)*fint;
+        resff = resff + sin(diffangle)*fint;
     }
 
     //convert this into desired speed on wheels (applying the force on a decaled point (DECFP) and calculating the couples see report)

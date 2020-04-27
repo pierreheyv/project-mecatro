@@ -13,6 +13,8 @@
 #include <math.h>
 #include <cmath>
 
+#define NBDATAPRED 4 //nb of data stored for predictive potential field
+
 NAMESPACE_INIT(ctrlGr4);
 
 /// Main controller structure
@@ -23,6 +25,7 @@ typedef struct CtrlStruct
 	CtrlOut *outputs; ///< controller outputs
 	CtrlOut *py_outputs; ///< python controller outputs
 
+	//base variables
 	int startingSide;
 
 	// Speed controller variables
@@ -55,6 +58,7 @@ typedef struct CtrlStruct
 	Map* mymap; //map object described in mapandpath.h
     int navigmode;
 	double **pos_beacon_disdirray;//the beacon array [0] = distance, [1] = direction, [2] = radius of influence
+	double ***prev_pos_beacon_disdirray;//table of previous beacon information
 
 } CtrlStruct;
 

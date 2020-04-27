@@ -8,7 +8,9 @@
 #include <math.h>
 #include <cmath>
 
-#define BASENODE 1
+#define NORTHNODE 8
+#define SOUTHNODE 9
+#define OPPONENTNODE 13
 #define NNODE 10//number of node in the map
 #define NBOBST 27
 #define GAMETIME 100
@@ -25,6 +27,7 @@ typedef struct Path{
     int objnb;//number of obj in the path
     int nextNode;//number of the next node on the path
     int nextNodelnb;//number of the next node on the destlist
+    int agressivmode;//var set to 1 if robot tactics and actions have to be agresive
 } Path;
 
 typedef struct Obstacles{
@@ -40,6 +43,7 @@ typedef struct Map //contient la carte + le most strategic path
     int obstaclesnb;
     double** obstacles;//
     Path* mypath;
+    int lastnode;
 } Map;
 
 void initpath (Map* mymap);

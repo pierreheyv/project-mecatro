@@ -32,7 +32,25 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="CtrlStruct_gr4.cc" />
+		<Unit filename="CtrlStruct_gr4.h" />
+		<Unit filename="calibration_gr4.cc" />
+		<Unit filename="calibration_gr4.h" />
+		<Unit filename="ctrl_io.h" />
+		<Unit filename="ctrl_main_gr4.cc" />
+		<Unit filename="ctrl_main_gr4.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="mapandpath_gr4.cpp" />
+		<Unit filename="mapandpath_gr4.h" />
+		<Unit filename="namespace_ctrl.h" />
+		<Unit filename="navigation_gr4.cc" />
+		<Unit filename="navigation_gr4.h" />
+		<Unit filename="performActions_gr4.cc" />
+		<Unit filename="performActions_gr4.h" />
+		<Unit filename="sensorInformation_gr4.cc" />
+		<Unit filename="sensorInformation_gr4.h" />
+		<Unit filename="speed_controller_gr4.cc" />
+		<Unit filename="speed_controller_gr4.h" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

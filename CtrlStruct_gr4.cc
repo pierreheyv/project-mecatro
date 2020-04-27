@@ -37,6 +37,19 @@ CtrlStruct* init_CtrlStruct(CtrlIn *inputs, CtrlOut *outputs, CtrlOut *py_output
         cvs->pos_beacon_disdirray[i] = new double[inputs->nb_opponents];
     }
 
+    //initialization of the beacon array [0] = distance, [1] = direction, [2] = radius of influence
+    cvs->prev_pos_beacon_disdirray = new double** [NBDATAPRED];
+    for(int i=0; i<NBDATAPRED ; i++) {
+
+        cvs->prev_pos_beacon_disdirray[i] = new double* [3];
+
+        for (int j=0; j<3 ; j++)
+        {
+            cvs->prev_pos_beacon_disdirray[i][j] = new double[inputs->nb_opponents];
+        }
+    }
+
+
 
 	return cvs;
 }

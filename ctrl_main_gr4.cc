@@ -35,8 +35,7 @@ void controller_init(CtrlStruct *cvs)
  */
 void controller_loop(CtrlStruct *cvs)
 {
-    //test if it's time to end and goback to base for the end of the game
-    cvs->tactual = cvs->inputs->t;
+    cvs->tactual = cvs->inputs->t;//?
 
     timeisover(cvs);//check if it is time to go back to base
 
@@ -76,10 +75,10 @@ void controller_loop(CtrlStruct *cvs)
 void timeisover(CtrlStruct *cvs)
 {
     cvs->mymap->mypath->timeleft = cvs->mymap->mypath->timeleft - cvs->tactual;
-    if ((cvs->mymap->dist[cvs->mymap->mypath->actual_node][BASENODE] + TIMEMARGIN < cvs->mymap->mypath->timeleft))//if time to go home : go home
+    if ((cvs->mymap->dist[cvs->mymap->mypath->actual_node][cvs->mymap->lastnode] + TIMEMARGIN < cvs->mymap->mypath->timeleft))//if time to go home : go home
     {
         cvs->stateGlobal = 1;
-        cvs->mymap->mypath->nextNode = BASENODE;//check in witch base to go (North or South)
+        cvs->mymap->mypath->nextNode = cvs->mymap->lastnode;//go to last node (return base (north of south)
     }
 }
 

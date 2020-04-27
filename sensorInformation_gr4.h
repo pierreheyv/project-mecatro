@@ -9,10 +9,10 @@
 #include <math.h>
 #include <cmath>
 
-#define KR 50
-#define KL 50
-#define WIDTH 0.09
-#define WRADIUS 0.03
+#define WIDTH 0.09 //robot width
+#define WRADIUS 0.03 //wheel radius
+#define DANGERDIST 0.1 //distance from opponent when pot navigation is needed
+#define OUTOFDANGERDIST 0.2 //distance from opponennt where pot navigation is no more needed
 
 
 NAMESPACE_INIT(ctrlGr4);

@@ -37,7 +37,10 @@ void odometrie(CtrlStruct *cvs)
     cvs->position_xyt[0] = cvs->position_xyt[0] + dx;
     cvs->position_xyt[1] = cvs->position_xyt[1] + dy;
     cvs->position_xyt[2] = (std::fmod((cvs->position_xyt[2] + dt),(2*M_PI)));
-    if(cvs->position_xyt[2] < 0){ cvs->position_xyt[2] = cvs->position_xyt[2] + 2*M_PI;}
+    if(cvs->position_xyt[2] < 0)
+    {
+        cvs->position_xyt[2] = cvs->position_xyt[2] + 2*M_PI;
+    }
 
     cvs->err_xyt[0]=cvs->err_xyt[0]+0.007*dx;
     cvs->err_xyt[1]=cvs->err_xyt[1]+0.007*dy;
@@ -57,9 +60,8 @@ void odometrie(CtrlStruct *cvs)
 //////////       Infos from detected opponent's robot beacons       //////////////
 //////////////////////////////////////////////////////////////////////////////////
 
-void dist_to_beam(CtrlStruct *cvs){
-
-    printf("\n");
+void dist_to_beam(CtrlStruct *cvs)
+{
 
     // WIDENESS = DETECTED wideness of the beacon in [mm]
     if (cvs->inputs->nb_opponents != cvs->inputs->nb_rising || cvs->inputs->nb_opponents != cvs->inputs->nb_falling)
@@ -73,13 +75,26 @@ void dist_to_beam(CtrlStruct *cvs){
 
     int index = cvs->inputs->falling_index;
 
-    for (int i=0; i < cvs->inputs->nb_opponents; i++){
+    for (int i=0; i < cvs->inputs->nb_opponents; i++)
+    {
+
+        //predictive data update
+        for (int k=0; k < 3; k++)
+        {
+            cvs->prev_pos_beacon_disdirray[0][k][i] = cvs->pos_beacon_disdirray[k][i];
+        }
+
+        for (int j=1; j < NBDATAPRED; j++)
+        {
+            for (int k=0; k < 3; k++)
+            {
+                cvs->prev_pos_beacon_disdirray[j][k][i] = cvs->prev_pos_beacon_disdirray[j-1][k][i];
+            }
+        }
 
         // Conversion Angle
         double alpha1 = cvs->inputs->last_rising[index-i];
         double alpha2 = cvs->inputs->last_falling[index-i];
-        printf("alpha1 : %f \n", alpha1);
-        printf("alpha2 : %f \n", alpha2);
 
         // Angle wideness
         double angle = alpha2 - alpha1;
@@ -99,24 +114,33 @@ void dist_to_beam(CtrlStruct *cvs){
 
         if(diff > 0)
         {
-            if(diff > M_PI){direction = alpha1 - (angle/2);}
-            else{direction = alpha1 + (angle/2);}
+            if(diff > M_PI)
+            {
+                direction = alpha1 - (angle/2);
+            }
+            else
+            {
+                direction = alpha1 + (angle/2);
+            }
         }
         else
         {
-            if(diff < -M_PI){direction = alpha2 - (angle/2);}
-            else{direction = alpha2 + (angle/2);}
+            if(diff < -M_PI)
+            {
+                direction = alpha2 - (angle/2);
+            }
+            else
+            {
+                direction = alpha2 + (angle/2);
+            }
         }
 
-            // To change format
+        // To change format
         double directionZeroTo2Pi = direction;
         if(directionZeroTo2Pi<0)
-            {directionZeroTo2Pi = directionZeroTo2Pi + 2*M_PI;}
-
-
-        // Target target's center Coming from val
-        //double direction = alpha1 + (alpha/2);
-        //if(direction>M_PI) {direction = direction - 2*M_PI;}
+        {
+            directionZeroTo2Pi = directionZeroTo2Pi + 2*M_PI;
+        }
 
         double distance = (WIDENESS/2)/(tan(angle/2)); // distance from the center of the laser tower
 
@@ -125,14 +149,16 @@ void dist_to_beam(CtrlStruct *cvs){
         double dir = asin(distance*sin(M_PI-direction)/dist);
         double r=0.1935; //fixed for all the detected robot as the maximal radius of the possible positions
 
+        //navigation mode update
+        if (dist<DANGERDIST)
+            cvs->navigmode = 1;
+        else if (dist > OUTOFDANGERDIST)
+            cvs->navigmode = 0;
+
         // Result of the function in the robot frame
         cvs->pos_beacon_disdirray[0][i]=dist;
         cvs->pos_beacon_disdirray[1][i]=dir;
         cvs->pos_beacon_disdirray[2][i]=r;
-
-        printf("pos_beacon_disdirray[0][%d] : %f \n",i, cvs->pos_beacon_disdirray[0][i]);
-        printf("pos_beacon_disdirray[1][%d] : %f \n",i, cvs->pos_beacon_disdirray[1][i]);
-        printf("pos_beacon_disdirray[2][%d] : %f \n",i, cvs->pos_beacon_disdirray[2][i]);
     }
 }
 
