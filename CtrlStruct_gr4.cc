@@ -49,7 +49,9 @@ CtrlStruct* init_CtrlStruct(CtrlIn *inputs, CtrlOut *outputs, CtrlOut *py_output
         }
     }
 
-
+    cvs->piston_in = 1;
+    cvs->piston_out = 0;
+    cvs->piston_state = 0;
 
 	return cvs;
 }

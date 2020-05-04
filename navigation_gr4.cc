@@ -20,7 +20,16 @@ NAMESPACE_INIT(ctrlGr4);
 void navigation(CtrlStruct *cvs)
 {
     if (cvs->navigmode == 0)
-        middle_controller(cvs, cvs->mymap->node[cvs->mymap->mypath->nextNode][0], cvs->mymap->node[cvs->mymap->mypath->nextNode][1]);
+    {
+        if (middle_controller(cvs, cvs->mymap->node[cvs->mymap->mypath->nextNode][0], cvs->mymap->node[cvs->mymap->mypath->nextNode][1]))
+        {
+            cvs->stateNavigation = 0;
+            cvs->mymap->mypath->actual_node = cvs->mymap->mypath->nextNode;//update actual node
+            cvs->stateGlobal = 2;//do action related to that node
+            cvs->startingActiontime = cvs->inputs->t;//record time from action state launch
+            printf("on target");
+        }
+    }
     else potential_field(cvs, cvs->mymap);
 }
 
@@ -28,7 +37,7 @@ void navigation(CtrlStruct *cvs)
  *
  * \param[in] cvs controller main structure, destination positions
  */
-void middle_controller(CtrlStruct *cvs, double objposx, double objposy)
+int middle_controller(CtrlStruct *cvs, double objposx, double objposy)//return 1 if on objective
 {
     double deltax = cvs->position_xyt[0] - objposx;
     double deltay = cvs->position_xyt[1] - objposy;
@@ -37,15 +46,12 @@ void middle_controller(CtrlStruct *cvs, double objposx, double objposy)
     // Checking if arrived at destination
     if (fabs(dist) < 0.01)
     {
-        cvs->stateNavigation = 0;
-        cvs->mymap->mypath->actual_node = cvs->mymap->mypath->nextNode;//update actual node
-        cvs->stateGlobal = 2;//do action related to that node
-        cvs->startingActiontime = cvs->inputs->t;//record time from action state launch
-        printf("on target");
+        return 1;
     }
     else
     {
         double diagangle = atan2(deltay,deltax); //atan(dy/dx)
+
         if (diagangle<0)
         {
             diagangle = diagangle + M_PI;
@@ -86,6 +92,24 @@ void middle_controller(CtrlStruct *cvs, double objposx, double objposy)
             cvs->wheel_demands[0] = KL*centerangle*(curv_radius+(sign*WIDTH));// formula for right wheel
             cvs->wheel_demands[1] = KL*centerangle*(curv_radius+(-sign*WIDTH)); // formula for left wheel
         }
+    }
+    return 0;
+}
+//----------------simu version--------------
+
+int simu_middle_controller(CtrlStruct *cvs, double objposx, double objposy)
+{
+    if (cvs->position_xyt[0]== objposx && cvs->position_xyt[1]==objposy)
+    {
+        printf("obj atteint\n");
+        return 1;
+    }
+    else
+    {
+        cvs->position_xyt[0] += 0;
+        cvs->position_xyt[1] += 1;
+        printf("déplacelement vers obj\n");
+        return 0;
     }
 }
 

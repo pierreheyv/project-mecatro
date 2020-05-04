@@ -21,6 +21,7 @@ NAMESPACE_INIT(ctrlGr4);
 void controller_init(CtrlStruct *cvs)
 {
     cvs->mymap = initmap();//cfr map and path
+    adapt_nodepoints_side(cvs, 1);//adpat node according to the side
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -35,7 +36,7 @@ void controller_init(CtrlStruct *cvs)
  */
 void controller_loop(CtrlStruct *cvs)
 {
-    cvs->tactual = cvs->inputs->t;//?
+    cvs->tactual = cvs->inputs->t;
 
     timeisover(cvs);//check if it is time to go back to base
 
@@ -95,6 +96,11 @@ void controller_finish(CtrlStruct *cvs)
 {
     cvs->outputs->wheel_commands[0] = 0;
     cvs->outputs->wheel_commands[1] = 0;
+}
+
+void adapt_nodepoints_side(CtrlStruct *cvs, int side)
+{
+    //...
 }
 
 NAMESPACE_CLOSE();

@@ -33,6 +33,7 @@ void controller_loop(CtrlStruct *cvs);
 void controller_finish(CtrlStruct *cvs);
 
 void timeisover(CtrlStruct *cvs);
+void adapt_nodepoints_side(CtrlStruct *cvs, int side)
 
 
 NAMESPACE_CLOSE();

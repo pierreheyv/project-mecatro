@@ -21,13 +21,14 @@ void update_destlist(Map* mymap, Path* simupath, int mode)//adapth mymap with th
 
         for(int i=0; i < NNODE; i++)
         {
-            if (psavepath->visited[i] == 0)//si le noeud n'a pas encore été visité et est atteignable à temps => si tps d'aller au noeud + tps d'action au noeud + temps de retour à la base est < temps restant
+            if (psavepath->visited[i] == 0)//si le noeud n'a pas encore été visité
             {
                 Path newpath = *psavepath;//créer nouveau path avec même intérieur que le savepath
                 Path* pnewpath = &newpath;//adresse de newpath
 
-                if ((mymap->dist[simupath->actual_node][i] + mymap->dist[0][i]+ mymap->node[i][4]) < simupath->timeleft)
+                if ((mymap->dist[simupath->actual_node][i] + mymap->dist[0][i]+ mymap->node[i][4]) < simupath->timeleft) //et est atteignable à temps => si tps d'aller au noeud + tps d'action au noeud + temps de retour à la base est < temps restant
                 {
+                    //printf("node number %d added to the list\n", i);
                     newpath.timeleft = pnewpath->timeleft - (mymap->dist[newpath.actual_node][i]+ mymap->node[i][4]); //timeleft update
                     newpath.totalPoints = (pnewpath->totalPoints + mymap->node[i][3]); //point number update
                     newpath.actual_node = i;//actual node for simulation
@@ -43,6 +44,7 @@ void update_destlist(Map* mymap, Path* simupath, int mode)//adapth mymap with th
                     newpath.visited[i] = 1;//set analysing node as visited
                     newpath.nbNodeNotVisited--;
                     update_destlist(mymap, pnewpath, mode);
+                    //printf("node number %d not joignable\n", i);
                 }
             }
         }
@@ -95,6 +97,14 @@ void initpath(Map *mymap)//init path + fill with a new best path
 {
     Path* mypath = (Path*) malloc(sizeof(Path));
     mymap->mypath = mypath;
+
+    for(int i=0; i < NNODE; i++)
+    {
+        mymap->mypath->visited[i] = 0;
+    }
+    mymap->mypath->actual_node = 0;
+    mymap->mypath->nbNodeNotVisited = NNODE-1;
+    mymap->mypath->visited[0] = 1;
     newpath(mymap, 0);
 }
 
@@ -103,7 +113,6 @@ Map* initmap()
     Map* mymap = (Map*) malloc(sizeof(Map));
     readmap(mymap);
     initpath(mymap);
-    mymap->mypath->actual_node = 0;
     mymap->lastnode = NORTHNODE; //till we know, return base = North (updated when we get the image result)
 
     load_obstacles(mymap);

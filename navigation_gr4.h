@@ -29,7 +29,8 @@ NAMESPACE_INIT(ctrlGr4);
 
 void navigation(CtrlStruct *cvs);
 
-void middle_controller(CtrlStruct *cvs, double x, double y);
+int middle_controller(CtrlStruct *cvs, double x, double y);
+int simu_middle_controller(CtrlStruct *cvs, double objposx, double objposy);
 void rot(CtrlStruct *cvs, double angle);
 
 void potential_field(CtrlStruct *structure, Map *mymap);

@@ -23,6 +23,7 @@ void controller_speed_loop(CtrlStruct *cvs)
 
     double ki=0.066;
     double kp=0.017;//0.025
+    double kd = 0.025;
     double kPhi=0.0261;
     double K=0.9998;
 
@@ -38,6 +39,9 @@ void controller_speed_loop(CtrlStruct *cvs)
     double integ_err_l = err_l*(cvs->period) + cvs->integ_err_l_prev;
     double integ_err_r = err_r*(cvs->period) + cvs->integ_err_r_prev;
 
+    double deriv_err_l = (err_l-cvs->prev_err_l)/cvs->period;
+    double deriv_err_r = (err_r-cvs->prev_err_r)/cvs->period;
+
     if (integ_err_l>0.95*24)
     {
         integ_err_l = 0.95*24;
@@ -47,8 +51,8 @@ void controller_speed_loop(CtrlStruct *cvs)
         integ_err_r = 0.95*24;
     }
 
-    double vl = kp*err_l + ki*integ_err_l;
-    double vr = kp*err_r + ki*integ_err_r;
+    double vl = kp*err_l + ki*integ_err_l + kd*deriv_err_l;
+    double vr = kp*err_r + ki*integ_err_r + kd*deriv_err_r;
 
     double Vl = vl+kPhi*omega_m_l/K;
     double Vr = vr+kPhi*omega_m_r/K;
@@ -90,6 +94,9 @@ void controller_speed_loop(CtrlStruct *cvs)
             Comm_r = Vr*100/(0.95*24);
         }
     }
+
+    cvs->prev_err_l = err_l;
+    cvs->prev_err_r = err_r;
 
     cvs->outputs->wheel_commands[0] = Comm_r;
     cvs->outputs->wheel_commands[1] = Comm_l;

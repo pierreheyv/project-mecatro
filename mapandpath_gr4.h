@@ -8,10 +8,10 @@
 #include <math.h>
 #include <cmath>
 
-#define NORTHNODE 8
-#define SOUTHNODE 9
-#define OPPONENTNODE 13
-#define NNODE 10//number of node in the map
+#define NORTHNODE 5
+#define SOUTHNODE 5
+#define OPPONENTNODE 3
+#define NNODE 7//number of node in the map
 #define NBOBST 27
 #define GAMETIME 100
 

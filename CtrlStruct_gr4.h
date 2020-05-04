@@ -31,6 +31,8 @@ typedef struct CtrlStruct
 	// Speed controller variables
 	double integ_err_l_prev;
 	double integ_err_r_prev;
+	double prev_err_l;
+	double prev_err_r;
 	double wheel_demands[2];
 
 	//odometry variable
@@ -51,14 +53,20 @@ typedef struct CtrlStruct
 	int stateGlobal;
 	int stateCalibration;
 	int stateNavigation;
-	int stateAction;
-	int action_state;
+	int stateAction;//state used for several actions
 
 	//navigation variables
 	Map* mymap; //map object described in mapandpath.h
     int navigmode;
 	double **pos_beacon_disdirray;//the beacon array [0] = distance, [1] = direction, [2] = radius of influence
 	double ***prev_pos_beacon_disdirray;//table of previous beacon information
+
+	//simuvariables
+	int piston_state;//poucentage of released piston
+
+	//supplementary input (from sensors
+    int piston_out;
+    int piston_in;
 
 } CtrlStruct;
 
